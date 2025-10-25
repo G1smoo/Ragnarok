@@ -50,6 +50,7 @@
 		"wrangler": "^4.43.0"
 	},
 	"dependencies": {
-		"daisyui": "^5.3.7"
+		"daisyui": "^5.3.7",
+		"pocketbase": "^0.26.2"
 	}
 }

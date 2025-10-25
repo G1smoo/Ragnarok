@@ -13,7 +13,7 @@
   <div class="flex-1">
 	<a class="btn btn-ghost text-xl items-center gap-2" href="/dashboard">
 <!-- FIX: Make the sizes corect to look good -->
-      <img src={favicon} alt="VFH" class="w-15 h-15" />
+      <img src={favicon} alt="Ragnarok" class="w-15 h-15" />
       <span>Ragnarok</span>
     </a>  </div>
   <div class="flex-none">

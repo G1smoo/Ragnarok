@@ -27,17 +27,21 @@ export {};
 
 declare module "$app/types" {
 	export interface AppTypes {
-		RouteId(): "/" | "/dashboard" | "/signin" | "/signup";
+		RouteId(): "/" | "/dashboard" | "/signin" | "/signup" | "/sub" | "/sub/helper" | "/sub/team" | "/sub/team/[subteam]";
 		RouteParams(): {
-			
+			"/sub/team/[subteam]": { subteam: string }
 		};
 		LayoutParams(): {
-			"/": Record<string, never>;
+			"/": { subteam?: string };
 			"/dashboard": Record<string, never>;
 			"/signin": Record<string, never>;
-			"/signup": Record<string, never>
+			"/signup": Record<string, never>;
+			"/sub": { subteam?: string };
+			"/sub/helper": Record<string, never>;
+			"/sub/team": { subteam?: string };
+			"/sub/team/[subteam]": { subteam: string }
 		};
-		Pathname(): "/" | "/dashboard" | "/dashboard/" | "/signin" | "/signin/" | "/signup" | "/signup/";
+		Pathname(): "/" | "/dashboard" | "/dashboard/" | "/signin" | "/signin/" | "/signup" | "/signup/" | "/sub" | "/sub/" | "/sub/helper" | "/sub/helper/" | "/sub/team" | "/sub/team/" | `/sub/team/${string}` & {} | `/sub/team/${string}/` & {};
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): "/robots.txt" | string & {};
 	}

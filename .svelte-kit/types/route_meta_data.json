@@ -8,5 +8,14 @@
 	],
 	"/signup": [
 		"src/routes/signup/+page.server.ts"
+	],
+	"/sub/helper": [
+		"src/routes/sub/helper/+page.server.ts"
+	],
+	"/sub/team": [
+		"src/routes/sub/team/+page.server.ts"
+	],
+	"/sub/team/[subteam]": [
+		"src/routes/sub/team/[subteam]/+page.server.ts"
 	]
 }
