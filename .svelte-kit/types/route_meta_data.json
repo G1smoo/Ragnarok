@@ -1,21 +1,29 @@
 {
-	"/": [],
+	"/": [
+		"src/routes/+layout.server.ts",
+		"src/routes/+layout.server.ts"
+	],
 	"/dashboard": [
-		"src/routes/dashboard/+page.server.ts"
+		"src/routes/dashboard/+page.server.ts",
+		"src/routes/+layout.server.ts"
 	],
 	"/signin": [
-		"src/routes/signin/+page.server.ts"
+		"src/routes/signin/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/signout": [
+		"src/routes/signout/+server.ts"
 	],
 	"/signup": [
-		"src/routes/signup/+page.server.ts"
+		"src/routes/signup/+page.server.ts",
+		"src/routes/+layout.server.ts"
 	],
 	"/sub/helper": [
-		"src/routes/sub/helper/+page.server.ts"
+		"src/routes/sub/helper/+page.server.ts",
+		"src/routes/+layout.server.ts"
 	],
 	"/sub/team": [
-		"src/routes/sub/team/+page.server.ts"
-	],
-	"/sub/team/[subteam]": [
-		"src/routes/sub/team/[subteam]/+page.server.ts"
+		"src/routes/sub/team/+page.server.ts",
+		"src/routes/+layout.server.ts"
 	]
 }

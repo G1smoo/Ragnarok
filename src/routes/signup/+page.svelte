@@ -13,20 +13,7 @@
 
 <div class="m-3 mx-auto max-w-xl rounded-xl bg-base-100 shadow">
 	<form method="POST" use:enhance class="flex flex-col p-3 space-y-3">
-		<h1 class="text-center text-2xl font-bold">Log ind</h1>
-
-		<label class="form-control w-full">
-			<div class="label">
-				<span class="label-text">Brugernavn</span>
-			</div>
-			<input
-				type="text"
-				name="username"
-				placeholder="Brugernavn"
-			
-				class="input input-bordered w-full"
-			/>
-		</label>
+		<h1 class="text-center text-2xl font-bold">Opret bruger</h1>
         
         <label class="form-control w-full">
 			<div class="label">
@@ -67,9 +54,22 @@
 			/>
 		</label>
 
-        <button class="btn btn-outline btn-primary btn-wide m-3 mx-auto" formaction="?/login">Log ind</button>
+        <button class="btn btn-outline btn-primary btn-wide m-3 mx-auto" formaction="?/register">Opret</button>
 		
-		
+	{#if form?.error}
+    	<ul class="notice-error">
+      	{#each form.errors as error}
+        	<li>
+				<div role="alert" class="alert alert-error m-2">
+  					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+   					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+  					</svg>
+  					<span>{error.field}: {error.message}</span>
+				</div>
+			</li>
+      	{/each}
+   		</ul>
+ 	{/if}
 		
 	</form>
 </div>

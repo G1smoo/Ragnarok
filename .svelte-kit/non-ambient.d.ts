@@ -27,21 +27,21 @@ export {};
 
 declare module "$app/types" {
 	export interface AppTypes {
-		RouteId(): "/" | "/dashboard" | "/signin" | "/signup" | "/sub" | "/sub/helper" | "/sub/team" | "/sub/team/[subteam]";
+		RouteId(): "/" | "/dashboard" | "/signin" | "/signout" | "/signup" | "/sub" | "/sub/helper" | "/sub/team";
 		RouteParams(): {
-			"/sub/team/[subteam]": { subteam: string }
+			
 		};
 		LayoutParams(): {
-			"/": { subteam?: string };
+			"/": Record<string, never>;
 			"/dashboard": Record<string, never>;
 			"/signin": Record<string, never>;
+			"/signout": Record<string, never>;
 			"/signup": Record<string, never>;
-			"/sub": { subteam?: string };
+			"/sub": Record<string, never>;
 			"/sub/helper": Record<string, never>;
-			"/sub/team": { subteam?: string };
-			"/sub/team/[subteam]": { subteam: string }
+			"/sub/team": Record<string, never>
 		};
-		Pathname(): "/" | "/dashboard" | "/dashboard/" | "/signin" | "/signin/" | "/signup" | "/signup/" | "/sub" | "/sub/" | "/sub/helper" | "/sub/helper/" | "/sub/team" | "/sub/team/" | `/sub/team/${string}` & {} | `/sub/team/${string}/` & {};
+		Pathname(): "/" | "/dashboard" | "/dashboard/" | "/signin" | "/signin/" | "/signout" | "/signout/" | "/signup" | "/signup/" | "/sub" | "/sub/" | "/sub/helper" | "/sub/helper/" | "/sub/team" | "/sub/team/";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): "/robots.txt" | string & {};
 	}

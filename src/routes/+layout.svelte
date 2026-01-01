@@ -1,8 +1,10 @@
 <script lang="ts">
 	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/favicon.png';
+    import type { LayoutData } from './$types';
+    import type { Snippet } from 'svelte';
 
-	let { children } = $props();
+	let { data, children }: { data: LayoutData; children: Snippet} = $props();
 </script>
 
 <svelte:head>
@@ -13,15 +15,24 @@
   <div class="flex-1">
 	<a class="btn btn-ghost text-xl items-center gap-2" href="/dashboard">
 <!-- FIX: Make the sizes corect to look good -->
-      <img src={favicon} alt="Ragnarok" class="w-15 h-15" />
-      <span>Ragnarok</span>
+      <img src={favicon} alt="Ragnarok" class="w-50 h-8" />
+ 
     </a>  </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1 space-x-2">
-      <li><a class="btn bth-ghost" href="/signin">Log Ind</a></li>
-      <li><a class="btn bth-ghost" href="/signup">Opret</a></li>
+      {#if data.currentUser}
+        <li><button>{data.currentUser?.email}</button></li>
+        <li class=" whitespace-nowrap">
+					<form method="POST" action="/signout" class="whitespace-nowrap">
+						<button>Log ud</button>
+					</form>
+			  </li>
+      {:else}
+        <li><a href="/signin">Log ind</a></li>
+      {/if}
     </ul>
   </div>
+
 </div>
 
 
