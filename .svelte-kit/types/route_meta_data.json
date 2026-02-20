@@ -7,6 +7,26 @@
 		"src/routes/dashboard/+page.server.ts",
 		"src/routes/+layout.server.ts"
 	],
+	"/dashboard/runs": [
+		"src/routes/dashboard/runs/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/dashboard/runs/[id]": [
+		"src/routes/dashboard/runs/[id]/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/dashboard/teams": [
+		"src/routes/dashboard/teams/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/forgot-password": [
+		"src/routes/forgot-password/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/reset-password": [
+		"src/routes/reset-password/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
 	"/signin": [
 		"src/routes/signin/+page.server.ts",
 		"src/routes/+layout.server.ts"

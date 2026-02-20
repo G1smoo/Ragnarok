@@ -1,7 +1,6 @@
 import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { any, z } from 'zod';
-import { error } from 'console';
+import { z } from 'zod';
 
 const userSchema = z.object({
 	email: z.string().trim().email().min(1),
@@ -23,23 +22,19 @@ export const actions = {
 		const createData = userSchema.safeParse(data);
 
 		if(!createData.success){
-			const errors = createData.error.errors.map((error) => {
-				return {
-					field: error.path[0],
-					message: error.message
-				}
-			})
-			return fail(400, { error: true , errors})
+			const errors = createData.error.issues.map((issue) => ({
+				field: issue.path[0],
+				message: issue.message
+			}));
+			return fail(400, { error: true, errors })
 		}
 
 		try {
-			const {token, record} = await locals.pb.collection('users').authWithPassword(createData.data.email, createData.data.password)
+			await locals.pb.collection('users').authWithPassword(createData.data.email, createData.data.password)
 		} catch (error) {
 			console.log('err: ');
 			console.log(error);
-			return fail(400, {
-				error: true,
-			});	
+			return fail(400, { error: true, errors: null });
 		}
 		throw redirect(303, '/dashboard');
 	}

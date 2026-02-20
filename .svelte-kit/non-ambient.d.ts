@@ -27,13 +27,18 @@ export {};
 
 declare module "$app/types" {
 	export interface AppTypes {
-		RouteId(): "/" | "/dashboard" | "/signin" | "/signout" | "/signup" | "/sub" | "/sub/helper" | "/sub/team";
+		RouteId(): "/" | "/dashboard" | "/dashboard/runs" | "/dashboard/runs/[id]" | "/dashboard/teams" | "/forgot-password" | "/reset-password" | "/signin" | "/signout" | "/signup" | "/sub" | "/sub/helper" | "/sub/team";
 		RouteParams(): {
-			
+			"/dashboard/runs/[id]": { id: string }
 		};
 		LayoutParams(): {
-			"/": Record<string, never>;
-			"/dashboard": Record<string, never>;
+			"/": { id?: string };
+			"/dashboard": { id?: string };
+			"/dashboard/runs": { id?: string };
+			"/dashboard/runs/[id]": { id: string };
+			"/dashboard/teams": Record<string, never>;
+			"/forgot-password": Record<string, never>;
+			"/reset-password": Record<string, never>;
 			"/signin": Record<string, never>;
 			"/signout": Record<string, never>;
 			"/signup": Record<string, never>;
@@ -41,7 +46,7 @@ declare module "$app/types" {
 			"/sub/helper": Record<string, never>;
 			"/sub/team": Record<string, never>
 		};
-		Pathname(): "/" | "/dashboard" | "/dashboard/" | "/signin" | "/signin/" | "/signout" | "/signout/" | "/signup" | "/signup/" | "/sub" | "/sub/" | "/sub/helper" | "/sub/helper/" | "/sub/team" | "/sub/team/";
+		Pathname(): "/" | "/dashboard" | "/dashboard/" | "/dashboard/runs" | "/dashboard/runs/" | `/dashboard/runs/${string}` & {} | `/dashboard/runs/${string}/` & {} | "/dashboard/teams" | "/dashboard/teams/" | "/forgot-password" | "/forgot-password/" | "/reset-password" | "/reset-password/" | "/signin" | "/signin/" | "/signout" | "/signout/" | "/signup" | "/signup/" | "/sub" | "/sub/" | "/sub/helper" | "/sub/helper/" | "/sub/team" | "/sub/team/";
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): "/robots.txt" | string & {};
 	}
