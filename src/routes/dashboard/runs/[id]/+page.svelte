@@ -161,18 +161,22 @@
 											<p class="font-medium text-sm">{ci.teamName}</p>
 											<p class="text-xs text-base-content/50">Ind kl. {fmt(ci.checked_in)}</p>
 										</div>
+										<!--
 										{#if data.currentUser}
 											<form method="POST" action="?/checkOut" use:enhance>
 												<input type="hidden" name="checkInId" value={ci.id} />
 												<button class="btn btn-xs btn-success">Ud ✓</button>
 											</form>
 										{/if}
+										-->
+										
 									</div>
 								{/each}
 							</div>
 						{/if}
 
 						<!-- Check in form -->
+						<!--
 						{#if data.currentUser}
 							{#if post.availableTeams.length > 0}
 								<form method="POST" action="?/checkIn" use:enhance class="flex gap-2 pt-1">
@@ -189,6 +193,7 @@
 								<p class="text-xs text-base-content/40 italic">Alle hold er tjekket ind</p>
 							{/if}
 						{/if}
+						-->
 					</div>
 				</div>
 			{/each}
