@@ -66,7 +66,7 @@ export const actions: Actions = {
 		await locals.pb.collection('check_ins').create({
 			team: data.team,
 			post: params.postId,
-			checked_in: new Date().toISOString().replace('T', ' ').slice(0, 19)
+			checked_in: new Date().toLocaleString('sv-SE', { timeZone: 'Europe/Copenhagen' })
 		});
 
 		return { success: true, action: 'checkIn' };
@@ -89,7 +89,7 @@ export const actions: Actions = {
 		}
 
 		await locals.pb.collection('check_ins').update(String(data.checkInId), {
-			checked_out: new Date().toISOString().replace('T', ' ').slice(0, 19),
+			checked_out: new Date().toLocaleString('sv-SE', { timeZone: 'Europe/Copenhagen' }),
 			points: points
 		});
 
