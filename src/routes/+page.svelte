@@ -4,17 +4,15 @@
     <div class="hero bg-base-200 ">
       <div class="hero-content text-center">
         <div class="max-w-md">
-          <h1 class="text-5xl font-bold">Hello there</h1>
-          <p class="py-6">
-            Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-            quasi. In deleniti eaque aut repudiandae et a id nisi.
-          </p>
+          <h1 class="text-5xl font-bold">Velkommen til Ragnarok</h1>
         </div>
       </div>
     </div>
+</div>
+<!--
 
 
-    <div class="flex justify-center space-x-3 mt-3">
+ <div class="flex justify-center space-x-3 mt-3">
         
         <div class="card w-full bg-base-100 card-xl shadow-sm ">
          <div class="card-body">
@@ -41,3 +39,9 @@
        </div>
     </div>
 </div>
+
+-->
+
+
+
+   
