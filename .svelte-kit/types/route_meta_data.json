@@ -15,8 +15,16 @@
 		"src/routes/dashboard/runs/[id]/+page.server.ts",
 		"src/routes/+layout.server.ts"
 	],
+	"/dashboard/runs/[id]/posts/[postId]": [
+		"src/routes/dashboard/runs/[id]/posts/[postId]/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
 	"/dashboard/teams": [
 		"src/routes/dashboard/teams/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/dashboard/teams/[id]": [
+		"src/routes/dashboard/teams/[id]/+page.server.ts",
 		"src/routes/+layout.server.ts"
 	],
 	"/forgot-password": [

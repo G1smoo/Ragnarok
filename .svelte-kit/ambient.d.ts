@@ -29,6 +29,7 @@ declare module '$env/static/private' {
 	export const ALLUSERSPROFILE: string;
 	export const APPDATA: string;
 	export const CHROME_CRASHPAD_PIPE_NAME: string;
+	export const CLAUDE_CODE_SSE_PORT: string;
 	export const COLOR: string;
 	export const COLORTERM: string;
 	export const CommonProgramFiles: string;
@@ -37,7 +38,7 @@ declare module '$env/static/private' {
 	export const ComSpec: string;
 	export const DriverData: string;
 	export const EDITOR: string;
-	export const EFC_8484_1592913036: string;
+	export const EFC_27596_1592913036: string;
 	export const GIT_ASKPASS: string;
 	export const HOME: string;
 	export const HOMEDRIVE: string;
@@ -87,6 +88,8 @@ declare module '$env/static/private' {
 	export const PUBLIC: string;
 	export const PY: string;
 	export const PyCharm: string;
+	export const PYTHONSTARTUP: string;
+	export const PYTHON_BASIC_REPL: string;
 	export const RlsSvcPort: string;
 	export const SESSIONNAME: string;
 	export const SystemDrive: string;
@@ -138,6 +141,7 @@ declare module '$env/dynamic/private' {
 		ALLUSERSPROFILE: string;
 		APPDATA: string;
 		CHROME_CRASHPAD_PIPE_NAME: string;
+		CLAUDE_CODE_SSE_PORT: string;
 		COLOR: string;
 		COLORTERM: string;
 		CommonProgramFiles: string;
@@ -146,7 +150,7 @@ declare module '$env/dynamic/private' {
 		ComSpec: string;
 		DriverData: string;
 		EDITOR: string;
-		EFC_8484_1592913036: string;
+		EFC_27596_1592913036: string;
 		GIT_ASKPASS: string;
 		HOME: string;
 		HOMEDRIVE: string;
@@ -196,6 +200,8 @@ declare module '$env/dynamic/private' {
 		PUBLIC: string;
 		PY: string;
 		PyCharm: string;
+		PYTHONSTARTUP: string;
+		PYTHON_BASIC_REPL: string;
 		RlsSvcPort: string;
 		SESSIONNAME: string;
 		SystemDrive: string;

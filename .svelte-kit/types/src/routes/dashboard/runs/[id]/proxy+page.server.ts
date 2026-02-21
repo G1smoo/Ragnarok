@@ -23,7 +23,7 @@ export const load = (async ({ locals, params }) => {
 				filter: `run = "${params.id}"`,
 				sort: 'order,name'
 			}),
-			locals.pb.collection('teams').getFullList({ sort: 'patruljenavn' }),
+			locals.pb.collection('teams').getFullList({ sort: 'team_name' }),
 			locals.pb.collection('check_ins').getFullList({
 				filter: `post.run = "${params.id}"`,
 				expand: 'team,post',
@@ -51,7 +51,7 @@ export const load = (async ({ locals, params }) => {
 				.map((ci) => ({
 					id: ci.id,
 					checked_in: ci.checked_in,
-					teamName: (ci.expand?.team as { patruljenavn?: string })?.patruljenavn ?? 'Ukendt hold',
+					teamName: (ci.expand?.team as { team_name?: string })?.team_name ?? 'Ukendt hold',
 					teamId: ci.team
 				}));
 			const activeTeamIds = new Set(activeCheckIns.map((ci) => ci.teamId));
@@ -60,7 +60,33 @@ export const load = (async ({ locals, params }) => {
 			return { id: post.id, name: post.name, order: post.order, activeCheckIns, availableTeams };
 		});
 
-		return { run, posts, teams, matrix, postData };
+		// Helper: sum points array
+		function sumPts(pts: unknown): number {
+			if (!Array.isArray(pts)) return 0;
+			return (pts as { value?: unknown }[]).reduce((s, p) => s + (Number(p.value) || 0), 0);
+		}
+
+		// Points leaderboard: total per team, sorted descending
+		const teamScores = teams
+			.map((team) => {
+				const teamCheckIns = checkIns.filter((ci) => ci.team === team.id && ci.checked_out);
+				const total = teamCheckIns.reduce((s, ci) => s + sumPts(ci.points), 0);
+				const postsVisited = teamCheckIns.length;
+				return { id: team.id, name: team.team_name, total, postsVisited };
+			})
+			.sort((a, b) => b.total - a.total);
+
+		// Points per post: total awarded at each post, sorted descending
+		const postScores = posts
+			.map((post) => {
+				const postCheckIns = checkIns.filter((ci) => ci.post === post.id && ci.checked_out);
+				const total = postCheckIns.reduce((s, ci) => s + sumPts(ci.points), 0);
+				const teamsServed = postCheckIns.length;
+				return { id: post.id, name: post.name, total, teamsServed };
+			})
+			.sort((a, b) => b.total - a.total);
+
+		return { run, posts, teams, matrix, postData, teamScores, postScores };
 	} catch {
 		throw redirect(303, '/dashboard/runs');
 	}

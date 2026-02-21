@@ -3,6 +3,7 @@
 	import type { PageData, ActionData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
+	let addPostModal: HTMLDialogElement | undefined;
 
 	function fmt(iso: string) {
 		if (!iso) return '';
@@ -39,7 +40,7 @@
 						<tbody>
 							{#each data.matrix as row}
 								<tr>
-									<td class="font-medium whitespace-nowrap">{row.team.patruljenavn}</td>
+									<td class="font-medium whitespace-nowrap">{row.team.team_name}</td>
 									{#each row.cells as cell}
 										<td class="text-center">
 											{#if cell.status === 'checked_out'}
@@ -71,10 +72,54 @@
 		</div>
 	{/if}
 
+	<!-- Points leaderboard -->
+	{#if data.teamScores.some((t) => t.total > 0) || data.postScores.some((p) => p.total > 0)}
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+			<!-- Team leaderboard -->
+			<div class="card bg-base-100 shadow">
+				<div class="card-body p-4">
+					<h2 class="text-lg font-semibold mb-3">Point — Hold</h2>
+					<ol class="space-y-2">
+						{#each data.teamScores as team, i}
+							<li class="flex items-center gap-3">
+								<span class="text-sm font-mono w-5 text-base-content/40 shrink-0">{i + 1}</span>
+								<a
+									href="/dashboard/teams/{team.id}"
+									class="flex-1 text-sm font-medium truncate hover:underline"
+								>{team.name}</a>
+								<span class="text-xs text-base-content/40 shrink-0">{team.postsVisited} poster</span>
+								<span class="badge badge-neutral font-mono shrink-0">{team.total} pt</span>
+							</li>
+						{/each}
+					</ol>
+				</div>
+			</div>
+
+			<!-- Post leaderboard -->
+			<div class="card bg-base-100 shadow">
+				<div class="card-body p-4">
+					<h2 class="text-lg font-semibold mb-3">Point — Poster</h2>
+					<ol class="space-y-2">
+						{#each data.postScores as post, i}
+							<li class="flex items-center gap-3">
+								<span class="text-sm font-mono w-5 text-base-content/40 shrink-0">{i + 1}</span>
+								<span class="flex-1 text-sm font-medium truncate">{post.name}</span>
+								<span class="text-xs text-base-content/40 shrink-0">{post.teamsServed} hold</span>
+								<span class="badge badge-neutral font-mono shrink-0">{post.total} pt</span>
+							</li>
+						{/each}
+					</ol>
+				</div>
+			</div>
+
+		</div>
+	{/if}
+
 	<!-- Posts section -->
 	<div class="flex items-center justify-between">
 		<h2 class="text-xl font-semibold">Poster</h2>
-		<button class="btn btn-primary btn-sm" onclick="add_post_modal.showModal()">+ Tilføj post</button>
+		<button class="btn btn-primary btn-sm" onclick={() => addPostModal?.showModal()}>+ Tilføj post</button>
 	</div>
 
 	{#if data.postData.length === 0}
@@ -88,7 +133,19 @@
 			{#each data.postData as post}
 				<div class="card bg-base-100 shadow">
 					<div class="card-body p-4 space-y-3">
-						<h3 class="font-semibold text-base">{post.name}</h3>
+						<div class="flex items-center justify-between gap-2">
+							<h3 class="font-semibold text-base">{post.name}</h3>
+							<a
+								href="/dashboard/runs/{data.run.id}/posts/{post.id}"
+								class="btn btn-outline btn-xs gap-1"
+								title="Åbn post-visning til mobil"
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+								</svg>
+								Post-visning
+							</a>
+						</div>
 
 						<!-- Active check-ins -->
 						{#if post.activeCheckIns.length === 0}
@@ -117,7 +174,7 @@
 								<select name="team" class="select select-bordered select-xs flex-1 min-w-0">
 									<option value="">Vælg hold...</option>
 									{#each post.availableTeams as team}
-										<option value={team.id}>{team.patruljenavn}</option>
+										<option value={team.id}>{team.team_name}</option>
 									{/each}
 								</select>
 								<button class="btn btn-primary btn-xs whitespace-nowrap">Check ind</button>
@@ -133,7 +190,7 @@
 </div>
 
 <!-- Add post modal -->
-<dialog id="add_post_modal" class="modal">
+<dialog bind:this={addPostModal} class="modal">
 	<div class="modal-box">
 		<h3 class="font-bold text-lg mb-4">Tilføj post</h3>
 		<form
@@ -143,7 +200,7 @@
 				return async ({ result, update }) => {
 					await update();
 					if (result.type === 'success') {
-						(document.getElementById('add_post_modal') as HTMLDialogElement)?.close();
+						addPostModal?.close();
 					}
 				};
 			}}
@@ -165,7 +222,7 @@
 			{/if}
 
 			<div class="modal-action">
-				<button type="button" class="btn" onclick="add_post_modal.close()">Annuller</button>
+				<button type="button" class="btn" onclick={() => addPostModal?.close()}>Annuller</button>
 				<button type="submit" class="btn btn-primary">Tilføj</button>
 			</div>
 		</form>

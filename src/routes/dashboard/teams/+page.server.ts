@@ -2,13 +2,21 @@ import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { z } from 'zod';
 
+const opt = z.string().trim().optional();
+
 const teamSchema = z.object({
-	patruljenavn: z.string().trim().min(1, 'Patruljenavn er påkrævet'),
-	gruppenavn: z.string().trim().min(1, 'Gruppenavn er påkrævet'),
-	antal: z.coerce.number().min(3).max(6),
-	leder_navn: z.string().trim().min(1, 'Leder navn er påkrævet'),
-	telefonnummer: z.string().trim().min(1, 'Telefonnummer er påkrævet'),
-	email: z.string().trim().email()
+	team_name: z.string().trim().min(1, 'Patruljenavn er påkrævet'),
+	group_name: z.string().trim().min(1, 'Gruppenavn er påkrævet'),
+	team_number: z.coerce.number().min(3).max(6),
+	contact_name: z.string().trim().min(1, 'Leder navn er påkrævet'),
+	contact_phone: z.string().trim().min(1, 'Telefonnummer er påkrævet'),
+	contact_email: z.string().trim().email(),
+	member01_name: opt, member01_age: opt, member01_notes: opt,
+	member02_name: opt, member02_age: opt, member02_notes: opt,
+	member03_name: opt, member03_age: opt, member03_notes: opt,
+	member04_name: opt, member04_age: opt, member04_notes: opt,
+	member05_name: opt, member05_age: opt, member05_notes: opt,
+	member06_name: opt, member06_age: opt, member06_notes: opt
 });
 
 export const load = (async ({ locals }) => {
