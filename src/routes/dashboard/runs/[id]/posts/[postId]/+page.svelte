@@ -6,19 +6,22 @@
 
 	// Checkout modal state
 	let checkoutModal: HTMLDialogElement | undefined;
-	let pendingCheckIn: { id: string; teamName: string } | null = $state(null);
-	let pointSets: { label: string; value: string }[] = $state([
-		{ label: 'Disciplin 1', value: '' },
-		{ label: 'Disciplin 2', value: '' }
-	]);
+	type ActiveCheckIn = { id: string; teamName: string; points: { label: string; value: number }[] };
+	let pendingCheckIn: ActiveCheckIn | null = $state(null);
+	let pointSets: { label: string; value: string }[] = $state([]);
 
-	function openCheckout(ci: { id: string; teamName: string }) {
+	function openCheckout(ci: ActiveCheckIn) {
 		pendingCheckIn = ci;
-		const presets = (data.post as any).point_presets;
-		if (Array.isArray(presets) && presets.length > 0) {
-			pointSets = presets.map((label: string) => ({ label, value: '' }));
+		if (ci.points.length > 0) {
+			// Pre-fill from previously saved points
+			pointSets = ci.points.map((p) => ({ label: p.label, value: p.value > 0 ? String(p.value) : '' }));
 		} else {
-			pointSets = [{ label: 'Opgaven', value: '' }, { label: 'Turnout', value: '' }];
+			const presets = (data.post as any).point_presets;
+			if (Array.isArray(presets) && presets.length > 0) {
+				pointSets = presets.map((label: string) => ({ label, value: '' }));
+			} else {
+				pointSets = [{ label: 'Opgaven', value: '' }, { label: 'Turnout', value: '' }];
+			}
 		}
 		checkoutModal?.showModal();
 	}
@@ -95,6 +98,10 @@
 									<div class="min-w-0">
 										<p class="font-bold text-lg leading-tight truncate">{ci.teamName}</p>
 										<p class="text-sm text-base-content/50 mt-0.5">Tjekket ind kl. {fmt(ci.checked_in)}</p>
+										{#if ci.points.length > 0}
+											{@const savedTotal = ci.points.reduce((s, p) => s + (p.value || 0), 0)}
+											<p class="text-xs text-info font-mono mt-1">{savedTotal} pt gemt</p>
+										{/if}
 									</div>
 									<button
 										class="btn btn-success btn-lg gap-2 min-w-[100px]"
@@ -183,26 +190,25 @@
 <!-- Checkout + points modal -->
 <dialog bind:this={checkoutModal} class="modal modal-bottom sm:modal-middle">
 	<div class="modal-box w-full max-w-lg">
-		<h3 class="font-bold text-lg mb-1">Check ud</h3>
+		<h3 class="font-bold text-lg mb-1">Point</h3>
 		{#if pendingCheckIn}
 			<p class="text-base-content/60 mb-5 text-sm">{pendingCheckIn.teamName}</p>
 		{/if}
 
 		<form
 			method="POST"
-			action="?/checkOut"
+			action="?/savePoints"
 			use:enhance={({ formData }) => {
-				// Capture current pointSets state at submit time — reliable in Svelte 5
 				formData.set(
 					'points',
 					JSON.stringify(pointSets.map((p) => ({ label: p.label, value: parseFloat(p.value) || 0 })))
 				);
 				return async ({ result, update }) => {
-					await update();
 					if (result.type === 'success') {
 						checkoutModal?.close();
 						pendingCheckIn = null;
 					}
+					await update();
 				};
 			}}
 			class="space-y-4"
@@ -260,7 +266,7 @@
 				</button>
 			</div>
 
-			<div class="modal-action mt-4">
+			<div class="modal-action mt-4 flex-wrap gap-2">
 				<button
 					type="button"
 					class="btn btn-ghost"
@@ -268,7 +274,10 @@
 				>
 					Annuller
 				</button>
-				<button type="submit" class="btn btn-success gap-2">
+				<button type="submit" class="btn btn-primary gap-2">
+					Gem point
+				</button>
+				<button type="submit" formaction="?/checkOut" class="btn btn-success gap-2">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
 					</svg>

@@ -22,7 +22,8 @@ export const load = (async ({ locals, params }) => {
 				id: ci.id,
 				checked_in: ci.checked_in,
 				teamName: (ci.expand?.team as { team_name?: string })?.team_name ?? 'Ukendt hold',
-				teamId: ci.team
+				teamId: ci.team,
+				points: Array.isArray(ci.points) ? (ci.points as { label: string; value: number }[]) : []
 			}));
 
 		const activeTeamIds = new Set(activeCheckIns.map((ci) => ci.teamId));
@@ -52,6 +53,22 @@ export const load = (async ({ locals, params }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
+	savePoints: async ({ locals, request }: import('./$types').RequestEvent) => {
+		const data = Object.fromEntries(await request.formData());
+		if (!data.checkInId) return fail(400, { error: true, action: 'savePoints' });
+
+		let points: { label: string; value: number }[] = [];
+		try {
+			if (data.points) {
+				const parsed = JSON.parse(String(data.points));
+				if (Array.isArray(parsed)) points = parsed;
+			}
+		} catch { /* ignore */ }
+
+		await locals.pb.collection('check_ins').update(String(data.checkInId), { points });
+		return { success: true, action: 'savePoints' };
+	},
+
 	checkIn: async ({ locals, params, request }: import('./$types').RequestEvent) => {
 		const data = Object.fromEntries(await request.formData());
 		if (!data.team) return fail(400, { error: true, action: 'checkIn', message: 'Vælg et hold' });
