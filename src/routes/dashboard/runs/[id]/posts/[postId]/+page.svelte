@@ -14,10 +14,12 @@
 
 	function openCheckout(ci: { id: string; teamName: string }) {
 		pendingCheckIn = ci;
-		pointSets = [
-			{ label: 'Opgaven', value: '' },
-			{ label: 'Turnout', value: '' }
-		];
+		const presets = (data.post as any).point_presets;
+		if (Array.isArray(presets) && presets.length > 0) {
+			pointSets = presets.map((label: string) => ({ label, value: '' }));
+		} else {
+			pointSets = [{ label: 'Opgaven', value: '' }, { label: 'Turnout', value: '' }];
+		}
 		checkoutModal?.showModal();
 	}
 
@@ -45,7 +47,7 @@
 	<!-- Top bar -->
 	<div class="bg-base-100 shadow-sm sticky top-0 z-10">
 		<div class="flex items-center gap-3 px-4 py-3">
-			<a href="/dashboard/runs/{data.run.id}" class="btn btn-ghost btn-sm btn-square">
+			<a href="/dashboard/runs/{data.run.id}" class="btn btn-ghost btn-sm btn-square" aria-label="Tilbage til løb">
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 				</svg>

@@ -4,6 +4,15 @@
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 	let addPostModal: HTMLDialogElement | undefined;
+	let presetModal: HTMLDialogElement | undefined;
+	let editingPost: { id: string; name: string } | null = $state(null);
+	let presetLabels: string[] = $state([]);
+
+	function openPresets(post: { id: string; name: string; point_presets: unknown }) {
+		editingPost = { id: post.id, name: post.name };
+		presetLabels = Array.isArray(post.point_presets) ? [...(post.point_presets as string[])] : [];
+		presetModal?.showModal();
+	}
 
 	function fmt(iso: string) {
 		if (!iso) return '';
@@ -138,16 +147,25 @@
 					<div class="card-body p-4 space-y-3">
 						<div class="flex items-center justify-between gap-2">
 							<h3 class="font-semibold text-base">{post.name}</h3>
-							<a
-								href="/dashboard/runs/{data.run.id}/posts/{post.id}"
-								class="btn btn-outline btn-xs gap-1"
-								title="Åbn post-visning til mobil"
-							>
-								<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-								</svg>
-								Post-visning
-							</a>
+							<div class="flex gap-1">
+								{#if data.currentUser}
+									<button
+										class="btn btn-ghost btn-xs"
+										title="Rediger point præsetter"
+										onclick={() => openPresets(post)}
+									>⚙ Præsetter</button>
+								{/if}
+								<a
+									href="/dashboard/runs/{data.run.id}/posts/{post.id}"
+									class="btn btn-outline btn-xs gap-1"
+									title="Åbn post-visning til mobil"
+								>
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+									</svg>
+									Post-visning
+								</a>
+							</div>
 						</div>
 
 						<!-- Active check-ins -->
@@ -236,6 +254,64 @@
 			<div class="modal-action">
 				<button type="button" class="btn" onclick={() => addPostModal?.close()}>Annuller</button>
 				<button type="submit" class="btn btn-primary">Tilføj</button>
+			</div>
+		</form>
+	</div>
+	<form method="dialog" class="modal-backdrop"><button>close</button></form>
+</dialog>
+
+<!-- Preset editor modal -->
+<dialog bind:this={presetModal} class="modal">
+	<div class="modal-box">
+		<h3 class="font-bold text-lg mb-1">Point præsetter — {editingPost?.name}</h3>
+		<p class="text-sm text-base-content/50 mb-4">Disse kategorier bruges som standard ved check-ud på denne post.</p>
+		<form
+			method="POST"
+			action="?/savePostPresets"
+			use:enhance={({ formData }) => {
+				formData.set('postId', editingPost?.id ?? '');
+				formData.set('presets', JSON.stringify(presetLabels.map((l) => l.trim()).filter(Boolean)));
+				return async ({ result, update }) => {
+					await update();
+					if (result.type === 'success') presetModal?.close();
+				};
+			}}
+			class="space-y-3"
+		>
+			<div class="space-y-2">
+				{#each presetLabels as _, i}
+					<div class="flex gap-2">
+						<input
+							type="text"
+							class="input input-bordered input-sm flex-1"
+							placeholder="f.eks. Kreativitet"
+							bind:value={presetLabels[i]}
+						/>
+						<button
+							type="button"
+							class="btn btn-ghost btn-sm btn-square text-error"
+							onclick={() => { presetLabels = presetLabels.filter((_, idx) => idx !== i); }}
+							aria-label="Fjern"
+						>✕</button>
+					</div>
+				{/each}
+			</div>
+
+			<button
+				type="button"
+				class="btn btn-ghost btn-sm w-full border border-dashed border-base-content/20"
+				onclick={() => { presetLabels = [...presetLabels, '']; }}
+			>+ Tilføj kategori</button>
+
+			{#if form?.error && (form as any)?.action === 'savePostPresets'}
+				<div role="alert" class="alert alert-error py-2">
+					<span class="text-sm">Kunne ikke gemme præsetter</span>
+				</div>
+			{/if}
+
+			<div class="modal-action">
+				<button type="button" class="btn" onclick={() => presetModal?.close()}>Annuller</button>
+				<button type="submit" class="btn btn-primary">Gem</button>
 			</div>
 		</form>
 	</div>

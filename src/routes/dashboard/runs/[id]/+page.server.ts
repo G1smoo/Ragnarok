@@ -57,7 +57,7 @@ export const load = (async ({ locals, params }) => {
 			const activeTeamIds = new Set(activeCheckIns.map((ci) => ci.teamId));
 			const availableTeams = teams.filter((t) => !activeTeamIds.has(t.id));
 
-			return { id: post.id, name: post.name, order: post.order, activeCheckIns, availableTeams };
+			return { id: post.id, name: post.name, order: post.order, activeCheckIns, availableTeams, point_presets: post.point_presets ?? [] };
 		});
 
 		// Helper: sum points array
@@ -93,6 +93,21 @@ export const load = (async ({ locals, params }) => {
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
+	savePostPresets: async ({ locals, request }) => {
+		if (!locals.user) throw redirect(303, '/');
+		if (!locals.user.verified) throw redirect(303, '/dashboard');
+
+		const data = Object.fromEntries(await request.formData());
+		let presets: string[] = [];
+		try {
+			const parsed = JSON.parse(String(data.presets || '[]'));
+			if (Array.isArray(parsed)) presets = parsed.filter((p) => typeof p === 'string' && p.trim());
+		} catch { /* ignore */ }
+
+		await locals.pb.collection('posts').update(String(data.postId), { point_presets: presets });
+		return { success: true, action: 'savePostPresets' };
+	},
+
 	addPost: async ({ locals, params, request }) => {
 		if (!locals.user) throw redirect(303, '/');
 		if (!locals.user.verified) throw redirect(303, '/dashboard');
