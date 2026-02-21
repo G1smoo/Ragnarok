@@ -3,9 +3,6 @@ import { redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load = (async ({ locals, params }) => {
-	if (!locals.user) throw redirect(303, '/');
-	if (!locals.user.verified) throw redirect(303, '/dashboard');
-
 	try {
 		const [run, post, teams, checkIns] = await Promise.all([
 			locals.pb.collection('runs').getOne(params.id),
@@ -56,9 +53,6 @@ export const load = (async ({ locals, params }) => {
 
 export const actions = {
 	checkIn: async ({ locals, params, request }: import('./$types').RequestEvent) => {
-		if (!locals.user) throw redirect(303, '/');
-		if (!locals.user.verified) throw redirect(303, '/dashboard');
-
 		const data = Object.fromEntries(await request.formData());
 		if (!data.team) return fail(400, { error: true, action: 'checkIn', message: 'Vælg et hold' });
 
@@ -80,9 +74,6 @@ export const actions = {
 	},
 
 	checkOut: async ({ locals, request }: import('./$types').RequestEvent) => {
-		if (!locals.user) throw redirect(303, '/');
-		if (!locals.user.verified) throw redirect(303, '/dashboard');
-
 		const data = Object.fromEntries(await request.formData());
 		if (!data.checkInId) return fail(400, { error: true, action: 'checkOut' });
 

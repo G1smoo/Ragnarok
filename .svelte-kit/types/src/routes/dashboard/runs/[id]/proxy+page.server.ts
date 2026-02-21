@@ -14,8 +14,8 @@ type CellStatus =
 	| { status: 'checked_out'; since: string; until: string };
 
 export const load = (async ({ locals, params }) => {
-	if (!locals.user) throw redirect(303, '/');
-	if (!locals.user.verified) throw redirect(303, '/dashboard');
+	//if (!locals.user) throw redirect(303, '/');
+	//if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 	try {
 		const [run, posts, teams, checkIns] = await Promise.all([

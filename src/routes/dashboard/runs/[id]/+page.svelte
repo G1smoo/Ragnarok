@@ -117,9 +117,12 @@
 	{/if}
 
 	<!-- Posts section -->
+	
 	<div class="flex items-center justify-between">
 		<h2 class="text-xl font-semibold">Poster</h2>
-		<button class="btn btn-primary btn-sm" onclick={() => addPostModal?.showModal()}>+ Tilføj post</button>
+		{#if data.currentUser}
+			<button class="btn btn-primary btn-sm" onclick={() => addPostModal?.showModal()}>+ Tilføj post</button>
+		{/if}
 	</div>
 
 	{#if data.postData.length === 0}
