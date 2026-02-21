@@ -1,0 +1,30 @@
+import "clsx";
+import "@sveltejs/kit/internal";
+import "../../../chunks/exports.js";
+import "../../../chunks/utils.js";
+import "@sveltejs/kit/internal/server";
+import "../../../chunks/state.svelte.js";
+function _page($$renderer, $$props) {
+  $$renderer.component(($$renderer2) => {
+    let { data, form } = $$props;
+    $$renderer2.push(`<div class="m-3 mx-auto max-w-xl rounded-xl bg-base-100 shadow"><form method="POST" action="?/request" class="flex flex-col p-3 space-y-3"><h1 class="text-center text-2xl font-bold">Glemt adgangskode</h1> <p class="text-center text-sm text-base-content/60">Indtast din email, så sender vi dig et link til at nulstille din adgangskode.</p> `);
+    if (form?.success) {
+      $$renderer2.push("<!--[-->");
+      $$renderer2.push(`<div role="alert" class="alert alert-success"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <span>Hvis emailen findes, har vi sendt et nulstillingslink.</span></div>`);
+    } else {
+      $$renderer2.push("<!--[!-->");
+      $$renderer2.push(`<label class="form-control w-full"><div class="label"><span class="label-text">Email</span></div> <input type="email" name="email" placeholder="Email" class="input input-bordered w-full" required/></label> `);
+      if (form?.error) {
+        $$renderer2.push("<!--[-->");
+        $$renderer2.push(`<div role="alert" class="alert alert-error m-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> <span>Ugyldig email</span></div>`);
+      } else {
+        $$renderer2.push("<!--[!-->");
+      }
+      $$renderer2.push(`<!--]--> <button class="btn btn-outline btn-primary btn-wide m-3 mx-auto">Send nulstillingslink</button>`);
+    }
+    $$renderer2.push(`<!--]--> <div class="text-center text-sm"><a href="/signin" class="link link-primary">Tilbage til login</a></div></form></div>`);
+  });
+}
+export {
+  _page as default
+};
