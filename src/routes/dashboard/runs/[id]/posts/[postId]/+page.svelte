@@ -232,6 +232,8 @@
 							type="number"
 							class="input input-bordered input-sm w-24 font-mono text-right"
 							placeholder="0"
+							max="1000"
+							min="0"
 							bind:value={ps.value}
 							inputmode="numeric"
 						/>
