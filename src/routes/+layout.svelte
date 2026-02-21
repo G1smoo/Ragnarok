@@ -13,26 +13,30 @@
 
 <div class="navbar bg-base-100 shadow-sm">
   <div class="flex-1">
-	<a class="btn btn-ghost text-xl items-center gap-2" href="/dashboard">
-<!-- FIX: Make the sizes corect to look good -->
+    <a class="btn btn-ghost text-xl items-center gap-2" href="/dashboard">
       <img src={favicon} alt="Ragnarok" class="w-50 h-8" />
- 
-    </a>  </div>
+    </a>
+    {#if data.currentUser?.verified}
+      <ul class="menu menu-horizontal px-1">
+        <li><a href="/dashboard/runs">Løb</a></li>
+        <li><a href="/dashboard/teams">Hold</a></li>
+      </ul>
+    {/if}
+  </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1 space-x-2">
       {#if data.currentUser}
         <li><button>{data.currentUser?.email}</button></li>
-        <li class=" whitespace-nowrap">
-					<form method="POST" action="/signout" class="whitespace-nowrap">
-						<button>Log ud</button>
-					</form>
-			  </li>
+        <li class="whitespace-nowrap">
+          <form method="POST" action="/signout" class="whitespace-nowrap">
+            <button>Log ud</button>
+          </form>
+        </li>
       {:else}
         <li><a href="/signin">Log ind</a></li>
       {/if}
     </ul>
   </div>
-
 </div>
 
 
