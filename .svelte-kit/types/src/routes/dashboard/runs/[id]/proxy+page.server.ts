@@ -15,6 +15,7 @@ type CellStatus =
 
 export const load = (async ({ locals, params }) => {
 	if (!locals.user) throw redirect(303, '/');
+	if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 	try {
 		const [run, posts, teams, checkIns] = await Promise.all([
@@ -95,6 +96,7 @@ export const load = (async ({ locals, params }) => {
 export const actions = {
 	addPost: async ({ locals, params, request }: import('./$types').RequestEvent) => {
 		if (!locals.user) throw redirect(303, '/');
+		if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 		const data = Object.fromEntries(await request.formData());
 		const parsed = postSchema.safeParse(data);
@@ -114,6 +116,7 @@ export const actions = {
 
 	checkIn: async ({ locals, request }: import('./$types').RequestEvent) => {
 		if (!locals.user) throw redirect(303, '/');
+		if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 		const data = Object.fromEntries(await request.formData());
 		if (!data.team || !data.post) return fail(400, { error: true, action: 'checkIn' });
@@ -137,6 +140,7 @@ export const actions = {
 
 	checkOut: async ({ locals, request }: import('./$types').RequestEvent) => {
 		if (!locals.user) throw redirect(303, '/');
+		if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 		const data = Object.fromEntries(await request.formData());
 		if (!data.checkInId) return fail(400, { error: true, action: 'checkOut' });

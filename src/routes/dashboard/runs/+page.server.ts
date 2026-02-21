@@ -9,6 +9,7 @@ const runSchema = z.object({
 
 export const load = (async ({ locals }) => {
 	if (!locals.user) throw redirect(303, '/');
+	if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 	const runs = await locals.pb.collection('runs').getFullList({ sort: '-created' });
 
@@ -18,6 +19,7 @@ export const load = (async ({ locals }) => {
 export const actions: Actions = {
 	create: async ({ locals, request }) => {
 		if (!locals.user) throw redirect(303, '/');
+		if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 		const data = Object.fromEntries(await request.formData());
 		const parsed = runSchema.safeParse(data);

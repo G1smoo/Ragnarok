@@ -3,6 +3,7 @@ import type { PageServerLoad, Actions } from './$types';
 
 export const load = (async ({ locals, params }) => {
 	if (!locals.user) throw redirect(303, '/');
+	if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 	try {
 		const [team, checkIns] = await Promise.all([
@@ -47,6 +48,7 @@ export const load = (async ({ locals, params }) => {
 export const actions: Actions = {
 	delete: async ({ locals, params }) => {
 		if (!locals.user) throw redirect(303, '/');
+		if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 		try {
 			await locals.pb.collection('teams').delete(params.id);

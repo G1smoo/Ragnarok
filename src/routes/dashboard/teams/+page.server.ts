@@ -21,6 +21,7 @@ const teamSchema = z.object({
 
 export const load = (async ({ locals }) => {
 	if (!locals.user) throw redirect(303, '/');
+	if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 	const teams = await locals.pb.collection('teams').getFullList({
 		sort: 'team_name'
@@ -32,6 +33,7 @@ export const load = (async ({ locals }) => {
 export const actions: Actions = {
 	create: async ({ locals, request }) => {
 		if (!locals.user) throw redirect(303, '/');
+		if (!locals.user.verified) throw redirect(303, '/dashboard');
 
 		const data = Object.fromEntries(await request.formData());
 		const parsed = teamSchema.safeParse(data);
